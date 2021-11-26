@@ -9,17 +9,13 @@
 #include<mutex>
 #include<map>
 #include<condition_variable>
-#define MAX_BUFF_SIZE 4096
+#define MAX_BUFF_SIZE 4096//最大buffer大小
 #define LAST_TIME_BUFF 256 //最后一次读取（超前读取）的buffer大小
 extern int N;//子线程数
 struct fileRecord
 {
     std::string dentry;
     long int filesize;
-};
-struct workMem
-{
-    std::string filename;
 };
 //记录一个工作分割
 struct splitRecord
@@ -32,6 +28,5 @@ struct splitRecord
 };
 extern std::map<std::string,int> globalCounter;//全局计数器，收集各线程的统计结果
 extern bool counterIdle;//全局计数器是否空闲
-extern bool processed;//条件变量，是否已经完成
-extern std::mutex mtx;//
-extern std::condition_variable cv;
+extern std::mutex mtx;//互斥量
+extern std::condition_variable cv;//条件变量

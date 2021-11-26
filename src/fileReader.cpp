@@ -95,7 +95,7 @@ void fileReader::debugOutput()
 void fileReader::work()
 {
     if(fileInput.is_open()) fileInput.close();
-    
+    //处理完整文件
     for(auto iter=srList->fullFilelist.begin();iter !=srList->fullFilelist.end();iter++)
     {
         fileInput.open((*iter).dentry,ios::in);
@@ -103,6 +103,7 @@ void fileReader::work()
         fileInput.close();
         //debugOutput();
     }
+    //处理分割文件
     for(int i=0;i<srList->cutFilecnt;i++)
     {
         fileInput.open(srList->cutFile[i].dentry,ios::in);
@@ -110,6 +111,7 @@ void fileReader::work()
         fileInput.close();
         //debugOutput();
     }
+    //临界区
     unique_lock<mutex> lck(mtx);
     cv.wait(lck,[](){return counterIdle;});
     counterIdle=false;

@@ -11,6 +11,7 @@
 #include<vector>
 #include<dirent.h>
 #include<sys/stat.h>
+#include<chrono>
 #include<ctime>
 #include"fileReader.h"
 #include"common.h"
@@ -18,7 +19,7 @@
 using namespace std;
 int N=8;
 vector<fileRecord> fileList;
-struct splitRecord *srList=new struct splitRecord[N];
+struct splitRecord *srList=nullptr;
 long int totalSize=0;
 std::map<std::string,int> globalCounter;
 bool counterIdle=true;//全局计数器是否空闲
@@ -149,7 +150,7 @@ void output(double timeUsed)
 }
 int main(int argc,char **argv)
 {
-    clock_t start=clock();
+    chrono::steady_clock::time_point t1=chrono::steady_clock::now();
     char rootFile[MAX_PATH];
     rootFile[0]='.';
     if(argc < 2)
@@ -173,6 +174,7 @@ int main(int argc,char **argv)
             return 0;
         }
     }
+    srList=new struct splitRecord[N];
     dfs(rootFile);
     splitWork();
     //fileReader *fR[N];
@@ -191,8 +193,9 @@ int main(int argc,char **argv)
     {
         thd[i].join();
     }
-    clock_t dur=clock()-start;
-    double timeUsed=(double)dur/(double)CLOCKS_PER_SEC;
+    chrono::steady_clock::time_point t2=chrono::steady_clock::now();
+    chrono::duration<double> time_span=chrono::duration_cast<chrono::duration<double>>(t2-t1);
+    double timeUsed=time_span.count();
     output(timeUsed);
     return 0;
 }

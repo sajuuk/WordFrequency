@@ -56,7 +56,9 @@
     "cmake.debugConfig": {
         "args": [
             "-d",
-            ".",
+            "../test",
+            "-n",
+            "16",
         ],
     },
 }
